@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Character, getLocalizedCharacters } from '../types/Character';
-import { useLanguage } from '/Users/lexuanquang/School-AI/src/contexts/LanguageContext.tsx';
+import { useLanguage } from '../contexts/LanguageContext';
 import { Play, Star, Users, Heart } from 'lucide-react';
 
 interface CharacterSelectionProps {
