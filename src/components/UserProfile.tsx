@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
+import { useLanguage } from '../contexts/LanguageContext';
 import { LogOut, User, Settings, ChevronDown } from 'lucide-react';
 
 export default function UserProfile() {
   const { user, logout } = useAuth();
+  const { t } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
 
   if (!user) return null;
@@ -81,7 +83,7 @@ export default function UserProfile() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <Settings className="w-4 h-4" />
-                  <span>Cài đặt tài khoản</span>
+                  <span>{t('auth.accountSettings')}</span>
                 </motion.button>
                 
                 <motion.button
@@ -94,7 +96,7 @@ export default function UserProfile() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <LogOut className="w-4 h-4" />
-                  <span>Đăng xuất</span>
+                  <span>{t('auth.logout')}</span>
                 </motion.button>
               </div>
             </motion.div>

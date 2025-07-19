@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     if (!foundUser) {
       setIsLoading(false);
-      throw new Error('Email hoặc mật khẩu không đúng');
+      throw new Error('auth.invalidCredentials');
     }
     
     const userSession: User = {
@@ -98,7 +98,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check if user already exists
     if (users.find(u => u.email === email)) {
       setIsLoading(false);
-      throw new Error('Email này đã được sử dụng');
+      throw new Error('auth.emailExists');
     }
     
     const newUser: StoredUser = {
@@ -137,7 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const foundUser = users.find(u => u.email === email);
     
     if (!foundUser) {
-      throw new Error('Không tìm thấy tài khoản với email này');
+      throw new Error('auth.userNotFound');
     }
     
     // In a real app, this would send an email

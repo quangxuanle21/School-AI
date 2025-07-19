@@ -40,24 +40,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const newErrors: Record<string, string> = {};
 
     if (!formData.email) {
-      newErrors.email = 'Email là bắt buộc';
+      newErrors.email = t('auth.emailRequired');
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email không hợp lệ';
+      newErrors.email = t('auth.emailInvalid');
     }
 
     if (mode !== 'forgot-password') {
       if (!formData.password) {
-        newErrors.password = 'Mật khẩu là bắt buộc';
+        newErrors.password = t('auth.passwordRequired');
       } else if (formData.password.length < 6) {
-        newErrors.password = 'Mật khẩu phải có ít nhất 6 ký tự';
+        newErrors.password = t('auth.passwordMinLength');
       }
 
       if (mode === 'register') {
         if (!formData.name) {
-          newErrors.name = 'Tên là bắt buộc';
+          newErrors.name = t('auth.nameRequired');
         }
         if (formData.password !== formData.confirmPassword) {
-          newErrors.confirmPassword = 'Mật khẩu xác nhận không khớp';
+          newErrors.confirmPassword = t('auth.passwordMismatch');
         }
       }
     }
@@ -80,7 +80,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
         onClose();
       } else if (mode === 'forgot-password') {
         await resetPassword(formData.email);
-        setSuccessMessage('Email khôi phục mật khẩu đã được gửi!');
+        setSuccessMessage(t('auth.resetEmailSent'));
       }
     } catch (error) {
       setErrors({ submit: (error as Error).message });
@@ -89,19 +89,19 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   const getTitle = () => {
     switch (mode) {
-      case 'login': return 'Đăng nhập';
-      case 'register': return 'Đăng ký tài khoản';
-      case 'forgot-password': return 'Quên mật khẩu';
+      case 'login': return t('auth.login');
+      case 'register': return t('auth.register');
+      case 'forgot-password': return t('auth.forgotPassword');
       default: return '';
     }
   };
 
   const getSubmitText = () => {
-    if (isLoading) return 'Đang xử lý...';
+    if (isLoading) return t('auth.processing');
     switch (mode) {
-      case 'login': return 'Đăng nhập';
-      case 'register': return 'Đăng ký';
-      case 'forgot-password': return 'Gửi email khôi phục';
+      case 'login': return t('auth.loginButton');
+      case 'register': return t('auth.registerButton');
+      case 'forgot-password': return t('auth.resetPasswordButton');
       default: return '';
     }
   };
@@ -144,9 +144,9 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
             
             <h2 className="text-2xl font-bold text-center">{getTitle()}</h2>
             <p className="text-blue-100 text-center mt-2">
-              {mode === 'login' && 'Chào mừng bạn quay trở lại!'}
-              {mode === 'register' && 'Tạo tài khoản mới để bắt đầu'}
-              {mode === 'forgot-password' && 'Nhập email để khôi phục mật khẩu'}
+              {mode === 'login' && t('auth.welcomeBack')}
+              {mode === 'register' && t('auth.createAccount')}
+              {mode === 'forgot-password' && t('auth.resetPasswordDesc')}
             </p>
           </div>
 
@@ -177,7 +177,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               {mode === 'register' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Họ và tên
+                    {t('auth.name')}
                   </label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -188,7 +188,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         errors.name ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Nhập họ và tên"
+                      placeholder={t('auth.enterName')}
                     />
                   </div>
                   {errors.name && (
@@ -200,7 +200,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               {/* Email field */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Email
+                  {t('auth.email')}
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -211,7 +211,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                       errors.email ? 'border-red-500' : 'border-gray-300'
                     }`}
-                    placeholder="Nhập email của bạn"
+                    placeholder={t('auth.enterEmail')}
                   />
                 </div>
                 {errors.email && (
@@ -223,7 +223,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               {mode !== 'forgot-password' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Mật khẩu
+                    {t('auth.password')}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -234,7 +234,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       className={`w-full pl-10 pr-12 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         errors.password ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Nhập mật khẩu"
+                      placeholder={t('auth.enterPassword')}
                     />
                     <button
                       type="button"
@@ -254,7 +254,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               {mode === 'register' && (
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Xác nhận mật khẩu
+                    {t('auth.confirmPassword')}
                   </label>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
@@ -265,7 +265,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                       className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                         errors.confirmPassword ? 'border-red-500' : 'border-gray-300'
                       }`}
-                      placeholder="Nhập lại mật khẩu"
+                      placeholder={t('auth.confirmPasswordPlaceholder')}
                     />
                   </div>
                   {errors.confirmPassword && (
@@ -305,15 +305,15 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     onClick={() => handleModeChange('forgot-password')}
                     className="text-blue-600 hover:text-blue-800 text-sm"
                   >
-                    Quên mật khẩu?
+                    {t('auth.forgotPasswordLink')}
                   </button>
                   <p className="text-gray-600 text-sm">
-                    Chưa có tài khoản?{' '}
+                    {t('auth.noAccount')}{' '}
                     <button
                       onClick={() => handleModeChange('register')}
                       className="text-blue-600 hover:text-blue-800 font-semibold"
                     >
-                      Đăng ký ngay
+                      {t('auth.registerNow')}
                     </button>
                   </p>
                 </>
@@ -321,24 +321,24 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
               {mode === 'register' && (
                 <p className="text-gray-600 text-sm">
-                  Đã có tài khoản?{' '}
+                  {t('auth.hasAccount')}{' '}
                   <button
                     onClick={() => handleModeChange('login')}
                     className="text-blue-600 hover:text-blue-800 font-semibold"
                   >
-                    Đăng nhập
+                    {t('auth.loginNow')}
                   </button>
                 </p>
               )}
 
               {mode === 'forgot-password' && !successMessage && (
                 <p className="text-gray-600 text-sm">
-                  Nhớ mật khẩu rồi?{' '}
+                  {t('auth.rememberPassword')}{' '}
                   <button
                     onClick={() => handleModeChange('login')}
                     className="text-blue-600 hover:text-blue-800 font-semibold"
                   >
-                    Đăng nhập
+                    {t('auth.loginNow')}
                   </button>
                 </p>
               )}

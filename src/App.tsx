@@ -141,7 +141,7 @@ function App() {
               whileTap={{ scale: 0.98 }}
             >
               <LogIn className="w-4 h-4 text-gray-600" />
-              <span className="text-sm font-medium text-gray-700">Đăng nhập</span>
+              <span className="text-sm font-medium text-gray-700">{t('auth.login')}</span>
             </motion.button>
           )}
         </div>
@@ -171,7 +171,7 @@ function App() {
             whileTap={{ scale: 0.98 }}
           >
             <LogIn className="w-4 h-4 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">Đăng nhập</span>
+            <span className="text-sm font-medium text-gray-700">{t('auth.login')}</span>
           </motion.button>
         )}
       </div>
