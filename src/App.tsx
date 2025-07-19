@@ -1,6 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { useAuth } from './contexts/AuthContext';
 import CharacterSelection from './components/CharacterSelection';
+import AuthModal from './components/AuthModal';
+import UserProfile from './components/UserProfile';
 import VirtualRoom from './components/VirtualRoom';
 import ChatInterface from './components/ChatInterface';
 import { useSpeechRecognition } from './hooks/useSpeechRecognition';
@@ -9,7 +12,7 @@ import { geminiApiService } from './services/geminiApiService';
 import { Character, getLocalizedCharacters } from './types/Character';
 import { useLanguage } from './contexts/LanguageContext';
 import LanguageSelector from './components/LanguageSelector';
-import { Heart, Shield, Users, ArrowLeft } from 'lucide-react';
+import { Heart, Shield, Users, ArrowLeft, LogIn } from 'lucide-react';
 
 interface Message {
   id: string;
@@ -20,7 +23,9 @@ interface Message {
 
 function App() {
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [speechEnabled, setSpeechEnabled] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -123,11 +128,25 @@ function App() {
   if (!selectedCharacter) {
     return (
       <div className="relative">
-        {/* Fixed Language Selector */}
-        <div className="fixed top-4 right-4 z-50">
+        {/* Fixed top bar */}
+        <div className="fixed top-4 right-4 z-50 flex items-center space-x-3">
           <LanguageSelector />
+          {user ? (
+            <UserProfile />
+          ) : (
+            <motion.button
+              onClick={() => setShowAuthModal(true)}
+              className="flex items-center space-x-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <LogIn className="w-4 h-4 text-gray-600" />
+              <span className="text-sm font-medium text-gray-700">Đăng nhập</span>
+            </motion.button>
+          )}
         </div>
         <CharacterSelection onSelectCharacter={setSelectedCharacter} />
+        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
       </div>
     );
   }
@@ -139,9 +158,22 @@ function App() {
       transition={{ duration: 0.8 }}
       className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"
     >
-      {/* Fixed Language Selector */}
-      <div className="fixed top-4 right-4 z-50">
+      {/* Fixed top bar */}
+      <div className="fixed top-4 right-4 z-50 flex items-center space-x-3">
         <LanguageSelector />
+        {user ? (
+          <UserProfile />
+        ) : (
+          <motion.button
+            onClick={() => setShowAuthModal(true)}
+            className="flex items-center space-x-2 px-4 py-2 bg-white/90 backdrop-blur-sm rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <LogIn className="w-4 h-4 text-gray-600" />
+            <span className="text-sm font-medium text-gray-700">Đăng nhập</span>
+          </motion.button>
+        )}
       </div>
       
       {/* Header */}
@@ -241,6 +273,8 @@ function App() {
           </motion.div>
         </div>
       </main>
+      
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </motion.div>
   );
 }
